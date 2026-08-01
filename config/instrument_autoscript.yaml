@@ -1,0 +1,23 @@
+# Instrument Registry: Thermo Scientific AutoScript TEM Simulator
+# All hardware safety bounds for this instrument.
+# Swap this file to target a different physical TEM instrument.
+
+instrument: autoscript_simulator
+description: "Thermo Scientific AutoScript TEM offline simulator"
+
+limits:
+  # Maximum allowed defocus change per single tool call (metres)
+  defocus_max_change_m: 5.0e-6
+
+  # Maximum allowed stage translation per single move_stage call (metres)
+  stage_translate_max_m: 10.0e-6
+
+  # Maximum allowed stage tilt per single move_stage call (degrees)
+  stage_tilt_max_deg: 45.0
+
+  # Acceleration voltage safety range (kV)
+  voltage_min_kv: 60.0
+  voltage_max_kv: 300.0
+
+  # Tolerance for defocus restoration check before finish (metres)
+  finish_defocus_tolerance_m: 10.0e-9

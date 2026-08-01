@@ -1,0 +1,139 @@
+# TEM Tool Registry
+# All tool definitions for the TEM Agent.
+# Add a new tool here - no Python code changes required.
+
+tools:
+  - name: get_microscope_state
+    description: >
+      Read the current microscope state required for focus optimization.
+      Returns current defocus value, magnification, acceleration voltage,
+      beam blank status, and column valve status.
+    input_schema:
+      type: object
+      properties: {}
+      required: []
+
+  - name: set_defocus
+    description: >
+      Adjust the objective lens defocus value.
+      Note: defocus is represented in metres (e.g., -150e-9 for -150 nm).
+      Always acquire a new image after setting defocus to see the effect.
+    input_schema:
+      type: object
+      properties:
+        target_df:
+          type: number
+          description: "The target defocus value in metres (e.g. -150e-9)."
+      required: [target_df]
+
+  - name: acquire_image
+    description: >
+      Acquire a new image from the TEM detector.
+      Returns image statistics: mean, standard deviation, normalized variance,
+      minimum, maximum, and defocus at acquisition.
+    input_schema:
+      type: object
+      properties: {}
+      required: []
+
+  - name: finish
+    description: >
+      Call this to complete the task. Ensure that the microscope is left at
+      the best observed defocus state and the beam is blanked before calling this.
+    input_schema:
+      type: object
+      properties:
+        summary:
+          type: string
+          description: "Summary of the task outcome including best observed defocus and final status."
+      required: [summary]
+
+  - name: set_magnification
+    description: "Set the magnification preset (zoom level) of the microscope optics."
+    input_schema:
+      type: object
+      properties:
+        magnification:
+          type: integer
+          description: "The target magnification nominal value (e.g. 4300, 200000, 300000)."
+      required: [magnification]
+
+  - name: move_stage
+    description: "Move the stage relative to the current position. Distances are in metres; angles are in degrees."
+    input_schema:
+      type: object
+      properties:
+        dX:
+          type: number
+          description: "Relative X shift in metres (default 0)."
+        dY:
+          type: number
+          description: "Relative Y shift in metres (default 0)."
+        dZ:
+          type: number
+          description: "Relative Z shift in metres (default 0)."
+        dA:
+          type: number
+          description: "Relative Alpha tilt adjustment in degrees (default 0)."
+        dB:
+          type: number
+          description: "Relative Beta tilt adjustment in degrees (default 0)."
+      required: []
+
+  - name: configure_detector
+    description: "Configure the imaging detector type and capture settings."
+    input_schema:
+      type: object
+      properties:
+        detector_type:
+          type: string
+          description: "The detector type to use (e.g. 'HAADF' or 'BM-Ceta')."
+        dwell_time_s:
+          type: number
+          description: "Dwell time (STEM) or exposure time (TEM) in seconds."
+        image_shape:
+          type: array
+          items:
+            type: integer
+          description: "The target resolution [width, height] (e.g. [512, 512])."
+      required: [detector_type]
+
+  - name: blank_beam
+    description: "Blank the electron beam to protect the specimen from radiation damage."
+    input_schema:
+      type: object
+      properties: {}
+      required: []
+
+  - name: unblank_beam
+    description: "Unblank the electron beam to allow electrons to pass through the column."
+    input_schema:
+      type: object
+      properties: {}
+      required: []
+
+  - name: open_column_valve
+    description: "Open the column valve to allow the beam to reach the specimen."
+    input_schema:
+      type: object
+      properties: {}
+      required: []
+
+  - name: close_column_valve
+    description: "Close the column valve to isolate the vacuum column."
+    input_schema:
+      type: object
+      properties: {}
+      required: []
+
+  - name: set_acceleration_voltage
+    description: >
+      Adjust the high-tension acceleration voltage of the electron gun (in kV).
+      Always verify the reading afterwards via get_microscope_state.
+    input_schema:
+      type: object
+      properties:
+        voltage_kv:
+          type: number
+          description: "The target acceleration voltage in kV (e.g. 80.0, 200.0, 300.0)."
+      required: [voltage_kv]
